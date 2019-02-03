@@ -1,0 +1,115 @@
+---
+title: "R Notebook - When Do People Call-in Sick?"
+output:
+  pdf_document: default
+  html_notebook: default
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+##Introduction
+People miss work when they are sick. Sometimes, people miss work and say it is because they are sick when they are really not sick at all. If we assume people are equally likely to get sick on any given day of the week, we can plot the data and run a statistical test to compare the number of observed sick days vs. the number of expected sick days. If we observe meaningful differences between the observed and expected counts, it may suggest that people are faking sick and missing work for a different reason.
+
+##Data
+Sick leave data were collected between 2011 and Q1 2015:
+
+```{r}
+## Set Working Directory
+setwd("~/Desktop/csusb_data_analysis")
+
+## Read data into R session.  FYI - stringsAsFactors = FALSE converts dates to Character instead of Factor
+sickData <- read.csv("data_sick_leave.csv", header = TRUE, stringsAsFactors = FALSE)
+
+```
+Dates when employees used sick days were recoded into two variables:
+
+ - Day of the week a sick day was taken (DOTW)
+ - Month the sick day was taken
+```{r}
+head(sickData)
+```
+
+```{r}
+## Convert dates from Character to POSIX
+wDate <- strptime(as.character(sickData$sickLeaveTaken), "%m/%d/%y")
+
+## Save reformatted Date variables to dataframe
+sickData <- data.frame(sickData, wDate)
+
+## Create new date variables - 'Day of the Week', and 'month'
+sickDotw <- weekdays(wDate)
+sickMonth <- months(wDate)
+
+## Save new date variables to dataframe
+sickData <- data.frame(sickData, sickDotw, sickMonth)
+head(sickDotw)
+```
+
+```{r}
+head(sickMonth)
+```
+
+Some reformatting and sorting were needed to get the plots to display Monday through Friday and January through December:
+
+```{r}
+## Re-order days of week to be Sunday through Saturday and months to be January through December
+sickData$sickDotw <- factor(sickData$sickDotw, levels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday"))
+sickData$sickMonth <- factor(sickData$sickMonth, levels = c("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"))
+
+## Subset Days of the week to only include observations equal to Monday through Friday
+sickData <- subset(sickData, sickDotw == "Monday" | sickDotw =="Tuesday" | sickDotw == "Wednesday" | sickDotw == "Thursday" | sickDotw == "Friday")
+```
+##Analysis
+The number of sick days by Day of the Week (DOTW) were plotted:
+```{r}
+## Create barplots:  Count of Sick Days by Day of the Week
+##install.packages("ggplot2")
+library(ggplot2)
+qplot(factor(sickDotw), data=sickData, xlab = "", ylab = "", fill = sickDotw, main = "Sick Days taken by DOTW",geom="bar")
+```
+
+```{r}
+table(sickData$sickDotw)
+```
+
+
+The number of sick days by Month were plotted:
+
+```{r}
+## Create barplots:  Count of Sick Days by Day Month
+library(ggplot2)
+qplot(factor(sickMonth), data=sickData, xlab = "", ylab = "", fill = sickMonth, main = "Sick Days taken by Month",geom="bar")
+```
+
+```{r}
+table(sickData$sickMonth)
+```
+
+A chi-squared test was run on sick days by day of the week to test if the differences between observed and expected counts were statistically different:
+
+```{r}
+##Chi-square - Test to see if there is a statistical difference between DOTW
+chiSquareWeekDay <- table(sickData$sickDotw)
+chiSquareWeekDay
+```
+
+```{r}
+chisq.test(table(sickData$sickDotw))
+```
+
+##Results
+
+###Sick Days by Day of the Week (DOTW)
+
+Monday is the most frequent day people in the sample called in sick. Mondays account for 20% more sick days than the next two most frequent days, Tuesday and Friday. A chi-squared test with 4 degrees of freedom resulted in p < .01 suggesting the differences in sick days across weekdays is not likely due to chance.
+
+###Sick Days by Month
+
+No statistical tests were planned to run on sick days per month. Just the barplot was used to look at the frequency of sick days reported by each month to see if any patterns emerged.
+
+###Discussion
+
+Monday accounted for 20% more sick days in the sample than the next two most frequent days, Tuesday and Friday. People were less likely to call in sick on Wednesday and Thursday compared with the other weekdays. Based on these results, it seems people do fake sick and miss work, usually on a Monday.
+
+When looking at the number of sick days by month, a different pattern emerges. One that suggests people miss work when they really are sick. The most frequent months people use sick days cluster around the winter months: January, February, and March with the lowest reported sick days occur during the summer months.
+
