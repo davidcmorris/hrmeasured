@@ -13,6 +13,11 @@ import numpy as np
 import pandas as pd
 from itertools import combinations
 import statsmodels.api as sm
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
+from matplotlib.colors import ListedColormap
 
 # ==============================================================================
 # Load Data
@@ -304,6 +309,224 @@ for outcome in outcomes:
     max_diff = comp["Diff_Pct"].abs().max()
     print(f"  -> Maximum absolute difference in % weights: {max_diff:.2f}%")
     print()
+
+
+# ==============================================================================
+# VISUALIZATIONS
+# ==============================================================================
+# Inspired by AJ Thurston's dominance analysis visualization approach
+# (https://github.com/AJThurston/dominance)
+
+# Readable predictor labels
+pred_labels = {
+    "supvExpectations": "Set Clear\nExpectations",
+    "supvFeedback": "Provided Timely\nFeedback",
+    "supvRecognition": "Recognized\nGood Work",
+    "supvCared": "Cared as\na Person",
+}
+pred_labels_oneline = {
+    "supvExpectations": "Set Clear Expectations",
+    "supvFeedback": "Provided Timely Feedback",
+    "supvRecognition": "Recognized Good Work",
+    "supvCared": "Cared as a Person",
+}
+outcome_labels = {
+    "returnToCompany": "Return to Company",
+    "recommendCompany": "Recommend Company",
+}
+
+colors = ["#336666", "#ae98d7", "#262626", "#7A918D"]
+
+# --------------------------------------------------------------------------
+# FIGURE 1: General Dominance - Thurston-style Stacked Horizontal Bar
+# --------------------------------------------------------------------------
+fig, ax = plt.subplots(figsize=(10, 3.5))
+
+bar_height = 0.35
+y_positions = [1, 0]  # Return on top, Recommend on bottom
+
+for idx, outcome in enumerate(outcomes):
+    gen_df = dom_results[outcome][0].copy()
+    full_r2 = dom_results[outcome][3]
+    # Sort by general dominance descending for consistent stacking
+    gen_df = gen_df.sort_values("General_Dominance", ascending=False).reset_index(drop=True)
+
+    left = 0
+    for j, row in gen_df.iterrows():
+        width = row["General_Dominance"]
+        bar = ax.barh(y_positions[idx], width, height=bar_height, left=left,
+                      color=colors[j], edgecolor="white", linewidth=0.5)
+        # Label inside the bar segment
+        cx = left + width / 2
+        pct = row["Pct_of_Rsquare"]
+        label = f"{pred_labels_oneline[row['Predictor']]}\n{pct:.1f}%"
+        ax.text(cx, y_positions[idx], label, ha="center", va="center",
+                fontsize=7.5, color="white", fontweight="bold")
+        left += width
+
+    # Total R² label at the end
+    ax.text(left + 0.008, y_positions[idx],
+            f"Total: {full_r2:.1%}",
+            ha="left", va="center", fontsize=9, fontweight="bold", color="#333333")
+
+ax.set_yticks(y_positions)
+ax.set_yticklabels([outcome_labels[o] for o in outcomes], fontsize=10, fontweight="bold")
+ax.set_xlim(0, 0.50)
+ax.set_xlabel(r"Percentage of $R^2$ Accounted for by Predictor", fontsize=10)
+ax.xaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"{x:.0%}"))
+ax.set_title("General Dominance Weights: Supervisor Behaviors Predicting Exit Survey Outcomes",
+             fontsize=11, fontweight="bold", pad=12)
+ax.spines["top"].set_visible(False)
+ax.spines["right"].set_visible(False)
+ax.tick_params(axis="y", length=0)
+plt.tight_layout()
+plt.savefig("/home/user/hrmeasured/da_general_dominance_stacked.png", dpi=300, bbox_inches="tight")
+plt.close()
+print("Saved: da_general_dominance_stacked.png")
+
+# --------------------------------------------------------------------------
+# FIGURE 2: General Dominance - Grouped Horizontal Bar Chart
+# --------------------------------------------------------------------------
+fig, ax = plt.subplots(figsize=(8, 5))
+
+pred_order = dom_results["recommendCompany"][0].sort_values(
+    "General_Dominance", ascending=True)["Predictor"].tolist()
+
+y = np.arange(len(pred_order))
+bar_h = 0.35
+
+for i, outcome in enumerate(outcomes):
+    gen_df = dom_results[outcome][0]
+    vals = [gen_df.loc[gen_df["Predictor"] == p, "Pct_of_Rsquare"].values[0]
+            for p in pred_order]
+    offset = -bar_h / 2 if i == 0 else bar_h / 2
+    bars = ax.barh(y + offset, vals, height=bar_h, color=colors[i],
+                   label=outcome_labels[outcome], edgecolor="white", linewidth=0.5)
+    for bar, val in zip(bars, vals):
+        ax.text(bar.get_width() + 0.3, bar.get_y() + bar.get_height() / 2,
+                f"{val:.1f}%", va="center", fontsize=8.5, color="#333333")
+
+ax.set_yticks(y)
+ax.set_yticklabels([pred_labels_oneline[p] for p in pred_order], fontsize=9)
+ax.set_xlabel(r"% of $R^2$", fontsize=10)
+ax.set_title("General Dominance: Predictor Importance by Outcome",
+             fontsize=11, fontweight="bold", pad=10)
+ax.legend(loc="lower right", frameon=True, fontsize=9)
+ax.spines["top"].set_visible(False)
+ax.spines["right"].set_visible(False)
+ax.set_xlim(0, 35)
+plt.tight_layout()
+plt.savefig("/home/user/hrmeasured/da_general_dominance_grouped.png", dpi=300, bbox_inches="tight")
+plt.close()
+print("Saved: da_general_dominance_grouped.png")
+
+# --------------------------------------------------------------------------
+# FIGURE 3: Conditional Dominance - Line Plot
+# --------------------------------------------------------------------------
+fig, axes = plt.subplots(1, 2, figsize=(12, 5), sharey=True)
+
+for ax_idx, outcome in enumerate(outcomes):
+    ax = axes[ax_idx]
+    cond_df = dom_results[outcome][1]
+
+    for j, pred in enumerate(predictors):
+        vals = cond_df.loc[pred].values
+        model_sizes = range(len(vals))
+        ax.plot(model_sizes, vals, marker="o", color=colors[j], linewidth=2,
+                markersize=7, label=pred_labels_oneline[pred])
+
+    ax.set_xlabel("Number of Predictors Already in Model (k)", fontsize=10)
+    if ax_idx == 0:
+        ax.set_ylabel(r"Average Incremental $R^2$", fontsize=10)
+    ax.set_title(outcome_labels[outcome], fontsize=11, fontweight="bold")
+    ax.set_xticks(range(len(predictors)))
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.legend(fontsize=8, loc="upper right", frameon=True)
+
+fig.suptitle("Conditional Dominance: Average Incremental Contribution by Model Size",
+             fontsize=12, fontweight="bold", y=1.02)
+plt.tight_layout()
+plt.savefig("/home/user/hrmeasured/da_conditional_dominance.png", dpi=300, bbox_inches="tight")
+plt.close()
+print("Saved: da_conditional_dominance.png")
+
+# --------------------------------------------------------------------------
+# FIGURE 4: Complete Dominance - Pairwise Heatmap
+# --------------------------------------------------------------------------
+fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+
+for ax_idx, outcome in enumerate(outcomes):
+    ax = axes[ax_idx]
+    comp_dom = dom_results[outcome][2]
+    gen_df = dom_results[outcome][0]
+    # Order predictors by general dominance (descending)
+    ordered = gen_df.sort_values("General_Dominance", ascending=False)["Predictor"].tolist()
+    n = len(ordered)
+
+    # Build matrix: 1 = row dominates col, -1 = col dominates row, 0 = no complete dominance
+    mat = np.full((n, n), np.nan)
+    for i in range(n):
+        mat[i, i] = 0  # diagonal
+        for j in range(n):
+            if i == j:
+                continue
+            # Find the pair in complete_dom
+            key1 = (ordered[i], ordered[j])
+            key2 = (ordered[j], ordered[i])
+            result = comp_dom.get(key1, comp_dom.get(key2, None))
+            if result is None:
+                mat[i, j] = 0
+            elif f"{ordered[i]} dominates" in result:
+                mat[i, j] = 1
+            elif f"{ordered[j]} dominates" in result:
+                mat[i, j] = -1
+            else:
+                mat[i, j] = 0
+
+    cmap = ListedColormap(["#d9534f", "#f0f0f0", "#5cb85c"])
+    im = ax.imshow(mat, cmap=cmap, vmin=-1, vmax=1, aspect="equal")
+
+    short_labels = [pred_labels_oneline[p] for p in ordered]
+    ax.set_xticks(range(n))
+    ax.set_xticklabels(short_labels, fontsize=7.5, rotation=35, ha="right")
+    ax.set_yticks(range(n))
+    ax.set_yticklabels(short_labels, fontsize=7.5)
+
+    # Annotate cells
+    for i in range(n):
+        for j in range(n):
+            if i == j:
+                ax.text(j, i, "-", ha="center", va="center", fontsize=10, color="#999")
+            elif mat[i, j] == 1:
+                ax.text(j, i, "Dom", ha="center", va="center", fontsize=8,
+                        color="white", fontweight="bold")
+            elif mat[i, j] == -1:
+                ax.text(j, i, "Sub", ha="center", va="center", fontsize=8,
+                        color="#333", fontweight="bold")
+            else:
+                ax.text(j, i, "No", ha="center", va="center", fontsize=8, color="#666")
+
+    ax.set_title(outcome_labels[outcome], fontsize=11, fontweight="bold")
+    ax.set_xlabel("Column Predictor", fontsize=9)
+    if ax_idx == 0:
+        ax.set_ylabel("Row Predictor", fontsize=9)
+
+# Legend
+legend_patches = [
+    mpatches.Patch(facecolor="#5cb85c", label="Row dominates column"),
+    mpatches.Patch(facecolor="#f0f0f0", edgecolor="#ccc", label="No complete dominance"),
+    mpatches.Patch(facecolor="#d9534f", label="Column dominates row"),
+]
+fig.legend(handles=legend_patches, loc="lower center", ncol=3, fontsize=9,
+           frameon=True, bbox_to_anchor=(0.5, -0.05))
+
+fig.suptitle("Complete Dominance: Pairwise Comparisons",
+             fontsize=12, fontweight="bold", y=1.02)
+plt.tight_layout()
+plt.savefig("/home/user/hrmeasured/da_complete_dominance.png", dpi=300, bbox_inches="tight")
+plt.close()
+print("Saved: da_complete_dominance.png")
 
 
 # ==============================================================================
