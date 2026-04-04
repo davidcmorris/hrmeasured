@@ -1,0 +1,64 @@
+---
+layout: base.njk
+title: Contact
+description: Get in touch with HR Measured to discuss your analytics and measurement needs.
+---
+
+<section class="page-hero">
+  <div class="container container--narrow">
+    <div class="section-label">Contact</div>
+    <h1>Let's talk.</h1>
+    <p class="page-intro">I take on a small number of engagements at a time. If you're working on something where rigorous measurement or prediction would help, I'd like to hear about it.</p>
+  </div>
+</section>
+
+<section class="contact-body">
+  <div class="container container--narrow">
+    <div class="contact-grid">
+      <div class="contact-form-wrap">
+        <form
+          name="contact"
+          method="POST"
+          data-netlify="true"
+          netlify-honeypot="bot-field"
+          action="/thanks/"
+        >
+          <input type="hidden" name="form-name" value="contact" />
+          <p class="hidden"><label>Don't fill this out: <input name="bot-field" /></label></p>
+
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" required autocomplete="name" />
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required autocomplete="email" />
+          </div>
+
+          <div class="form-group">
+            <label for="organization">Organization</label>
+            <input type="text" id="organization" name="organization" autocomplete="organization" />
+          </div>
+
+          <div class="form-group">
+            <label for="message">What are you working on?</label>
+            <textarea id="message" name="message" rows="6" required></textarea>
+          </div>
+
+          <button type="submit" class="btn btn--primary">Send Message</button>
+        </form>
+      </div>
+
+      <div class="contact-info">
+        <h3>What to expect</h3>
+        <p>I respond to every inquiry personally, usually within two business days. If there's a potential fit, I'll suggest a 30-minute call to learn more about your situation.</p>
+        <p>I'm not the right fit for every project — if I'm not, I'll tell you that and try to point you somewhere useful.</p>
+        <div class="contact-direct">
+          <p>Or reach me directly:</p>
+          <a href="mailto:david@hrmeasured.com" class="contact-email">david@hrmeasured.com</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

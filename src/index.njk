@@ -1,0 +1,104 @@
+---
+layout: base.njk
+title: Home
+description: HR Measured — rigorous analytics for people decisions. Prediction over description, distributions over averages.
+---
+
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <p class="hero-eyebrow">HR Analytics, Done Differently</p>
+      <h1 class="hero-headline">Better decisions about people start with better questions.</h1>
+      <p class="hero-sub">Most HR analytics tells you what happened. I help you predict what will happen — and act on it with appropriate confidence.</p>
+      <div class="hero-actions">
+        <a href="/services/" class="btn btn--primary">See How I Work</a>
+        <a href="/about/" class="btn btn--ghost">About Me</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="philosophy">
+  <div class="container">
+    <div class="section-label">Philosophy</div>
+    <h2>The average employee doesn't exist.</h2>
+    <p class="section-intro">Planning around point estimates — the average turnover rate, the typical engagement score — ignores the range of outcomes you actually face. I work with distributions, not just means. Uncertainty isn't a problem to eliminate; it's information to quantify.</p>
+    <div class="principles">
+      <div class="principle">
+        <div class="principle-number">01</div>
+        <h3>Measure what matters, not what's easy</h3>
+        <p>If it matters to your organization, it can be measured — perhaps not perfectly, but well enough to reduce uncertainty and improve decisions. That's the standard.</p>
+      </div>
+      <div class="principle">
+        <div class="principle-number">02</div>
+        <h3>Prediction beats description</h3>
+        <p>Dashboards tell you where you've been. Good models tell you where you're going. I build models designed to predict outcomes — turnover, performance, fit — not just report on them.</p>
+      </div>
+      <div class="principle">
+        <div class="principle-number">03</div>
+        <h3>Calibrate your confidence</h3>
+        <p>The goal isn't certainty — it's calibrated uncertainty. Knowing you're 70% confident in an outcome, and knowing what would change that, is more valuable than a false sense of precision.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="services-preview">
+  <div class="container">
+    <div class="section-label">Services</div>
+    <h2>What I do</h2>
+    <div class="service-cards">
+      <a href="/services/#prediction" class="service-card">
+        <h3>Workforce Prediction Models</h3>
+        <p>Turnover risk, performance classification, promotion readiness — built and validated against your own data.</p>
+        <span class="card-arrow">&rarr;</span>
+      </a>
+      <a href="/services/#measurement" class="service-card">
+        <h3>Measurement Design</h3>
+        <p>Define what you actually need to measure, build instruments that measure it, and validate that they do.</p>
+        <span class="card-arrow">&rarr;</span>
+      </a>
+      <a href="/services/#decision" class="service-card">
+        <h3>Decision Analysis</h3>
+        <p>Frame people decisions under uncertainty. Quantify what you know, identify what's worth learning, choose with clarity.</p>
+        <span class="card-arrow">&rarr;</span>
+      </a>
+      <a href="/services/#assessment" class="service-card">
+        <h3>Survey & Assessment</h3>
+        <p>Rigorous psychometric design for employee surveys, assessments, and selection instruments.</p>
+        <span class="card-arrow">&rarr;</span>
+      </a>
+    </div>
+    <div class="section-cta">
+      <a href="/services/" class="btn btn--outline">All Services</a>
+    </div>
+  </div>
+</section>
+
+{% if collections.posts.length %}
+<section class="insights-preview">
+  <div class="container">
+    <div class="section-label">Insights</div>
+    <h2>Recent thinking</h2>
+    <div class="post-list">
+      {% for post in collections.posts | slice(0, 3) %}
+      <article class="post-preview">
+        <time class="post-date">{{ post.date | readableDate }}</time>
+        <h3><a href="{{ post.url }}">{{ post.data.title }}</a></h3>
+        <p>{{ post.data.excerpt }}</p>
+      </article>
+      {% endfor %}
+    </div>
+    <div class="section-cta">
+      <a href="/insights/" class="btn btn--outline">All Insights</a>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<section class="cta-banner">
+  <div class="container">
+    <h2>Let's figure out what you actually need to measure.</h2>
+    <a href="/contact/" class="btn btn--primary">Start a Conversation</a>
+  </div>
+</section>
