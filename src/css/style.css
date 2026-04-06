@@ -124,18 +124,21 @@ p { max-width: 68ch; }
 .site-logo {
   text-decoration: none;
   display: flex;
-  align-items: center;
+  align-items: baseline;
+  gap: 0.15rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
 }
 
-.logo-img {
-  height: 48px;
-  width: auto;
-  display: block;
+.logo-mark {
+  color: var(--color-accent);
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  font-weight: 400;
 }
 
-.logo-img--footer {
-  height: 36px;
-}
+.logo-text { color: var(--color-text); }
 
 .site-nav {
   display: flex;
