@@ -3,7 +3,7 @@ module.exports = {
   description: "Rigorous analytics for people decisions. Prediction over description, distributions over averages.",
   url: "https://hrmeasured.com",
   author: "David Morris",
-  email: "david@hrmeasured.com",
+  email: "davidcmorris@hey.com",
   year: new Date().getFullYear(),
   nav: [
     { label: "About", url: "/about/" },
