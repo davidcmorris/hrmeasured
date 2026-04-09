@@ -127,22 +127,16 @@ p { max-width: 68ch; }
   align-items: center;
 }
 
-.logo-img {
-  height: 56px;
-  width: auto;
-  display: block;
-}
-
-.logo-img--footer {
-  height: 44px;
-}
-
-.logo-wordmark {
-  font-size: 1.1rem;
+.logo-text {
+  font-size: 1.25rem;
   font-weight: 600;
-  color: var(--color-text);
+  color: var(--color-text-muted);
   letter-spacing: -0.02em;
-  margin-left: 0.5rem;
+}
+
+.logo-hr {
+  color: var(--color-accent);
+  font-weight: 700;
 }
 
 .site-nav {
