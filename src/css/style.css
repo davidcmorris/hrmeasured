@@ -137,6 +137,14 @@ p { max-width: 68ch; }
   height: 44px;
 }
 
+.logo-wordmark {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  letter-spacing: -0.02em;
+  margin-left: 0.5rem;
+}
+
 .site-nav {
   display: flex;
   align-items: center;
