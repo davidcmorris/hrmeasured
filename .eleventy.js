@@ -8,7 +8,14 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addCollection("posts", function (collectionApi) {
     return collectionApi
       .getFilteredByGlob("src/insights/posts/*.md")
-      .reverse();
+      .sort((a, b) => b.date - a.date);
+  });
+
+  // Case study collection sorted newest first
+  eleventyConfig.addCollection("caseStudies", function (collectionApi) {
+    return collectionApi
+      .getFilteredByGlob("src/case-studies/*.njk")
+      .sort((a, b) => b.date - a.date);
   });
 
   // Readable date filter
@@ -17,6 +24,7 @@ module.exports = function (eleventyConfig) {
       year: "numeric",
       month: "long",
       day: "numeric",
+      timeZone: "UTC",
     });
   });
 

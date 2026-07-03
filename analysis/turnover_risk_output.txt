@@ -1,0 +1,42 @@
+N = 600, train = 418, holdout = 182
+Base 6-month turnover rate (full sample): 18.7%
+
+=== Naive model (engagement score only) ===
+               Coef.  Std.Err.         z         P>|z|    [0.025    0.975]
+const       2.182428  0.658960  3.311930  9.265483e-04  0.890891  3.473965
+engagement -1.124379  0.208966 -5.380673  7.420782e-08 -1.533945 -0.714813
+Holdout AUC (naive): 0.655
+
+=== Full model (+ comp ratio, promotion stall, peer attrition) ===
+                           Coef.  Std.Err.  ...    [0.025    0.975]
+const                   6.032853  1.550136  ...  2.994642  9.071064
+engagement             -1.134365  0.219643  ... -1.564857 -0.703873
+comp_ratio             -5.250760  1.324373  ... -7.846483 -2.655038
+months_since_promotion  0.019356  0.005972  ...  0.007652  0.031061
+peer_attrition_rate     3.992017  1.130546  ...  1.776187  6.207847
+
+[5 rows x 6 columns]
+Holdout AUC (full): 0.772
+
+Odds ratios (full model):
+                        odds_ratio     ci_low      ci_high
+const                   416.902719  19.978205  8699.874372
+engagement                0.321626   0.209118     0.494666
+comp_ratio                0.005244   0.000391     0.070296
+months_since_promotion    1.019545   1.007681     1.031548
+peer_attrition_rate      54.164020   5.907287   496.630829
+
+Risk deciles (holdout, full model):
+   decile   n  actual_rate
+0       1  19     0.000000
+1       2  18     0.055556
+2       3  18     0.111111
+3       4  18     0.055556
+4       5  18     0.055556
+5       6  18     0.222222
+6       7  18     0.166667
+7       8  18     0.222222
+8       9  18     0.500000
+9      10  19     0.368421
+
+Top 2 deciles (~20% of holdout workforce) capture 50% of actual 6-month leavers.

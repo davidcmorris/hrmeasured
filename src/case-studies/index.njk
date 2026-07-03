@@ -1,0 +1,31 @@
+---
+layout: base.njk
+title: Case Studies
+description: Worked examples of HR Measured's approach — measurement design and predictive modeling applied to synthetic and illustrative HR data.
+eleventyExcludeFromCollections: true
+---
+
+<section class="page-hero">
+  <div class="container container--narrow">
+    <div class="section-label">Case Studies</div>
+    <h1>The method, worked through end to end.</h1>
+    <p class="page-intro">Full walkthroughs — measurement design, model, results, and honest limitations — using synthetic or illustrative data. Not client work, but the same approach.</p>
+  </div>
+</section>
+
+<section class="insights-list">
+  <div class="container container--narrow">
+    {% if collections.caseStudies.length %}
+      {% for study in collections.caseStudies %}
+      <article class="post-preview post-preview--full">
+        <time class="post-date">{{ study.date | readableDate }}</time>
+        <h2><a href="{{ study.url }}">{{ study.data.title }}</a></h2>
+        {% if study.data.excerpt %}<p>{{ study.data.excerpt }}</p>{% endif %}
+        <a href="{{ study.url }}" class="read-more">Read &rarr;</a>
+      </article>
+      {% endfor %}
+    {% else %}
+      <p class="empty-state">No case studies yet — check back soon.</p>
+    {% endif %}
+  </div>
+</section>

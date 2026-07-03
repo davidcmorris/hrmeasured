@@ -5,6 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="{{ description or site.description }}" />
   <title>{% if title %}{{ title }} — {% endif %}{{ site.title }}</title>
+  <link rel="icon" type="image/svg+xml" href="/img/logo_hr_measured_allcaps.svg" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="{{ site.title }}" />
+  <meta property="og:title" content="{% if title %}{{ title }} — {% endif %}{{ site.title }}" />
+  <meta property="og:description" content="{{ description or site.description }}" />
+  <meta property="og:url" content="{{ site.url }}{{ page.url }}" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="{% if title %}{{ title }} — {% endif %}{{ site.title }}" />
+  <meta name="twitter:description" content="{{ description or site.description }}" />
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet" />
@@ -21,7 +32,7 @@
           <a href="{{ item.url }}" class="nav-link{% if page.url == item.url %} active{% endif %}">{{ item.label }}</a>
         {% endfor %}
       </nav>
-      <button class="nav-toggle" aria-label="Toggle navigation">
+      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
     </div>
@@ -55,7 +66,12 @@
   <script>
     const toggle = document.querySelector('.nav-toggle');
     const nav = document.querySelector('.site-nav');
-    toggle.addEventListener('click', () => nav.classList.toggle('open'));
+    toggle.addEventListener('click', () => {
+      const isOpen = nav.classList.toggle('open');
+      toggle.classList.toggle('open', isOpen);
+      toggle.setAttribute('aria-expanded', isOpen);
+      document.body.classList.toggle('nav-open', isOpen);
+    });
   </script>
 </body>
 </html>

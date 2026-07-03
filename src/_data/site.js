@@ -8,6 +8,7 @@ module.exports = {
   nav: [
     { label: "About", url: "/about/" },
     { label: "Services", url: "/services/" },
+    { label: "Case Studies", url: "/case-studies/" },
     { label: "Insights", url: "/insights/" },
     { label: "Contact", url: "/contact/" },
   ],

@@ -169,8 +169,12 @@ p { max-width: 68ch; }
   width: 22px;
   height: 2px;
   background: var(--color-text);
-  transition: var(--transition);
+  transition: transform var(--transition), opacity var(--transition);
 }
+
+.nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-toggle.open span:nth-child(2) { opacity: 0; }
+.nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
 /* --- Hero --- */
 .hero {
@@ -499,6 +503,67 @@ p { max-width: 68ch; }
 }
 .back-link:hover { text-decoration: underline; }
 
+/* --- Case study --- */
+.callout {
+  background: var(--color-surface);
+  border-left: 3px solid var(--color-highlight);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+  margin: 2rem 0;
+}
+.callout p {
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  max-width: none;
+}
+.callout p:last-child { margin-bottom: 0; }
+.callout strong { color: var(--color-text); }
+
+.case-study-figure { margin: 2.5rem 0; }
+.case-study-figure img {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: #fff;
+  width: 100%;
+}
+.case-study-figure figcaption {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-top: 0.75rem;
+}
+
+.tier-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0 2rem;
+}
+.tier-card {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  text-align: center;
+}
+.tier-card .tier-name {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+  margin-bottom: 0.5rem;
+}
+.tier-card .tier-rate {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  color: var(--color-accent);
+  line-height: 1;
+}
+.tier-card .tier-n {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  margin-top: 0.4rem;
+}
+
 /* --- Contact page --- */
 .contact-body { padding: var(--space-lg) 0; }
 
@@ -604,20 +669,24 @@ textarea { resize: vertical; }
 @media (max-width: 768px) {
   .site-nav {
     display: none;
-    position: absolute;
+    position: fixed;
     top: 64px;
     left: 0;
     right: 0;
+    height: calc(100vh - 64px);
     background: var(--color-bg);
     border-bottom: 1px solid var(--color-border);
     flex-direction: column;
     padding: 1.5rem;
     gap: 1.25rem;
     align-items: flex-start;
+    overflow-y: auto;
+    z-index: 99;
   }
   .site-nav.open { display: flex; }
-  .nav-toggle { display: flex; }
+  .nav-toggle { display: flex; z-index: 101; }
   .site-header { position: relative; }
+  body.nav-open { overflow: hidden; }
 
   .hero { padding: var(--space-lg) 0; }
   .philosophy, .services-preview, .insights-preview { padding: var(--space-lg) 0; }

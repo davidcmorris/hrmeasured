@@ -1,0 +1,46 @@
+N = 450, train = 329, holdout = 121
+Base promotion rate (full sample): 16.2%
+
+=== Naive model (tenure + performance rating only) ===
+                       Coef.  Std.Err.         z     P>|z|    [0.025    0.975]
+const              -3.155966  0.734825 -4.294855  0.000017 -4.596196 -1.715736
+tenure_years        0.043718  0.056460  0.774318  0.438743 -0.066942  0.154379
+performance_rating  0.383947  0.198120  1.937946  0.052630 -0.004362  0.772255
+Holdout AUC (naive): 0.574
+
+=== Full model (+ behavioral observations + assessment data) ===
+                          Coef.  Std.Err.  ...    [0.025    0.975]
+const                 -6.748670  1.156772  ... -9.015901 -4.481438
+behavioral_leadership  0.354272  0.184240  ... -0.006832  0.715377
+behavioral_execution   0.265783  0.172956  ... -0.073204  0.604770
+judgment_z             0.517563  0.178254  ...  0.168192  0.866934
+competency_score       0.036134  0.013561  ...  0.009555  0.062713
+tenure_years           0.048210  0.061924  ... -0.073159  0.169578
+performance_rating     0.258832  0.228777  ... -0.189563  0.707227
+
+[7 rows x 6 columns]
+Holdout AUC (full): 0.669
+
+Odds ratios (full model):
+                       odds_ratio    ci_low   ci_high
+const                    0.001172  0.000121  0.011317
+behavioral_leadership    1.425143  0.993191  2.044957
+behavioral_execution     1.304452  0.929411  1.830831
+judgment_z               1.677933  1.183163  2.379604
+competency_score         1.036794  1.009601  1.064721
+tenure_years             1.049391  0.929453  1.184805
+performance_rating       1.295416  0.827320  2.028359
+
+Calibration table (holdout, full model):
+   predicted    actual   n
+0   0.024243  0.040000  25
+1   0.060187  0.125000  24
+2   0.101537  0.166667  24
+3   0.182415  0.333333  24
+4   0.414215  0.208333  24
+
+Readiness tiers (holdout, full model):
+         tier   n  actual_promotion_rate
+0     Not Yet  77               0.129870
+1  Developing  32               0.187500
+2   Ready Now  12               0.416667

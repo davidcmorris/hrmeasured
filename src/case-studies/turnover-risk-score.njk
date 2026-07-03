@@ -1,0 +1,83 @@
+---
+layout: base.njk
+title: Building a Turnover Risk Score That Sees Past Engagement Scores
+description: Why engagement survey scores alone leave real turnover signal on the table — pay competitiveness, promotion stalling, and peer attrition all add independent predictive power. Synthetic-data demo of the method.
+date: 2026-07-02
+excerpt: Most organizations already have a decent turnover predictor — the engagement survey — and stop there. Widening the lens to pay competitiveness, promotion stalling, and peer attrition lifted holdout AUC from 0.66 to 0.77.
+---
+
+<article class="post-article">
+  <div class="container container--narrow">
+    <header class="post-header">
+      <div class="post-meta">
+        <span class="tag">Case Study</span>
+        <span class="tag">Workforce Prediction</span>
+      </div>
+      <h1>Building a Turnover Risk Score That Sees Past Engagement Scores</h1>
+      <p class="post-excerpt">The other two case studies here (<a href="/case-studies/promotion-readiness-index/">promotion readiness</a> and <a href="/case-studies/high-potential-construct/">"high potential"</a>) both start from data that's nearly worthless on its own. Turnover is different: most organizations already have one genuinely decent predictor — the engagement survey — and treat it as the whole story. It isn't.</p>
+    </header>
+
+    <div class="post-body">
+
+      <div class="callout">
+        <p><strong>This is a demonstration, not a client engagement.</strong> The population and outcomes below are synthetic. Every number in this write-up is the actual output of the analysis script — nothing was tuned after the fact to make the story cleaner.</p>
+      </div>
+
+      <h2>The question</h2>
+      <p>An organization wants a turnover risk score refreshed monthly — not a report on who already left, but a forward-looking flag on who's likely to leave in the next six months, with enough explanation attached that a manager can act on it rather than just worry about it. Today, the closest thing to a signal is the annual engagement survey: low scorers get a follow-up conversation, and that's the extent of the process.</p>
+
+      <h2>Start with what's already there</h2>
+      <p>Unlike the naive proxies in the other case studies, engagement score isn't a bad predictor. Tested alone against six-month turnover on a held-out sample, it does real work.</p>
+
+      <figure class="case-study-figure">
+        <img src="/img/case-studies/turnover_auc_comparison.svg" alt="Bar chart comparing holdout AUC: engagement score alone at 0.66 versus the full model at 0.77" loading="lazy" />
+        <figcaption>AUC measures discrimination — the model's ability to rank someone who leaves above someone who stays. 0.50 is a coin flip; 1.00 is perfect separation.</figcaption>
+      </figure>
+
+      <p>An AUC of 0.66 from a single survey item is a legitimately useful starting point — nowhere near the near-chance naive baselines in the other case studies. The mistake most organizations make isn't trusting engagement data; it's assuming that because they have <em>a</em> predictor, they've solved the problem.</p>
+
+      <h2>Widening the lens</h2>
+      <p>Three additional signals were added, each capturing something engagement scores don't:</p>
+      <ul>
+        <li><strong>Pay competitiveness</strong> — current pay relative to the market band midpoint. Someone can love their job and still leave for a 20% raise.</li>
+        <li><strong>Promotion stalling</strong> — time since last promotion. Engagement surveys capture how someone feels right now, not whether they've quietly concluded their growth here has plateaued.</li>
+        <li><strong>Peer attrition</strong> — the share of an employee's immediate team that has left in the trailing six months. Turnover isn't purely an individual decision; coworkers' departures measurably raise the odds that the people around them leave too, a pattern documented in the turnover literature as "turnover contagion" (Felps et al., 2009).</li>
+      </ul>
+      <p>None of these show up in an annual engagement survey. All three are already sitting in the HRIS and comp system.</p>
+
+      <h2>The model</h2>
+      <p>A logistic regression combining all four inputs lifts holdout discrimination from 0.66 to <strong>0.77</strong> — a substantial jump, not a marginal one.</p>
+
+      <figure class="case-study-figure">
+        <img src="/img/case-studies/turnover_odds_ratios.svg" alt="Forest plot of odds ratios and 95% confidence intervals for each predictor in the full turnover model" loading="lazy" />
+        <figcaption>Odds ratios and 95% confidence intervals, full model. All four intervals sit clear of 1.0 in this sample.</figcaption>
+      </figure>
+
+      <p>All four predictors clear conventional significance, and the direction of each is exactly what you'd expect: a one-point engagement gain multiplies the odds of leaving by roughly 0.32; being paid 10 points closer to market cuts the odds by roughly 41%; a year without a promotion raises the odds by roughly 26%; and every 10-point rise in trailing team attrition raises an individual's own odds by roughly 49%. That last one is the number worth sitting with — a team going through a wave of departures isn't just losing people, it's actively raising the flight risk of everyone who's left.</p>
+
+      <h2>From score to action</h2>
+      <p>Splitting the holdout population into ten risk deciles shows whether the model actually separates people who leave from people who stay — the practical test of a score that's going to drive real conversations.</p>
+
+      <figure class="case-study-figure">
+        <img src="/img/case-studies/turnover_risk_deciles.svg" alt="Bar chart of actual six-month turnover rate by predicted risk decile, showing a generally increasing trend from decile 1 to 10" loading="lazy" />
+        <figcaption>Holdout employees split into ten equal-sized groups by predicted risk, plotted against their actual six-month turnover rate.</figcaption>
+      </figure>
+
+      <p>The trend runs the right direction — low deciles barely lose anyone, the top deciles lose far more than average — but it isn't a perfectly straight staircase. Decile 9 (50% actual turnover) came in higher than decile 10 (37%), the group the model rated as highest risk. With about 18 people per decile in this holdout, that's the kind of noise a small sample produces, not evidence the model is broken; it's exactly the sort of wobble that would need watching, not explaining away, if this were a live score.</p>
+      <p>The operational number: the top 20% of the workforce by predicted risk accounts for <strong>50% of actual six-month departures</strong>. Flagging one in five people catches half of the people who are actually going to leave — a real, usable lift over flagging people at random, and small enough in headcount that it changes conversations with managers rather than dumping a spreadsheet on them.</p>
+
+      <h2>What this demonstrates — and its limits</h2>
+      <p>The synthetic numbers above illustrate a method, not a benchmark to expect elsewhere: don't stop at the one predictor you already have, add inputs that capture genuinely different mechanisms (comp, growth, social context) rather than restating the same signal, and report the score's practical performance (capture rate, decile behavior) rather than just a summary statistic.</p>
+      <p>A real engagement would go further than this demo: checking for adverse impact before any score reaches a manager, monitoring for model drift as compensation cycles and org structure shift underneath it, and validating the "peer attrition" signal carefully — it's a genuinely useful predictor and an easy one to build into a self-fulfilling narrative if it's presented to managers without care.</p>
+
+      <div class="callout">
+        <p><strong>Want a risk score built for your own turnover drivers?</strong> The approach — start with what you already measure, add inputs that capture different mechanisms, validate against real outcomes — is the same one used in real engagements. <a href="/contact/">Start a conversation</a> or read more about <a href="/services/#prediction">workforce prediction models</a>.</p>
+      </div>
+
+    </div>
+
+    <footer class="post-footer">
+      <a href="/insights/" class="back-link">&larr; All Insights</a>
+    </footer>
+  </div>
+</article>

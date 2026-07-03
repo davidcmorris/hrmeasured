@@ -1,0 +1,83 @@
+---
+layout: base.njk
+title: Making "High Potential" Measurable
+description: A construct-definition and reliability walkthrough — turning an unstructured "high potential" nomination into a measured, validated rubric. Synthetic-data demo of the method.
+date: 2026-06-25
+excerpt: '"High potential" drives who gets development budget and succession slots, and most companies assign it by gut feel. A worked example of defining the construct, building a rubric, and checking whether two raters actually agree.'
+---
+
+<article class="post-article">
+  <div class="container container--narrow">
+    <header class="post-header">
+      <div class="post-meta">
+        <span class="tag">Case Study</span>
+        <span class="tag">Measurement Design</span>
+      </div>
+      <h1>Making "High Potential" Measurable</h1>
+      <p class="post-excerpt">"High potential" is one of the most consequential labels in HR — it drives who gets development investment, stretch assignments, and succession slots. It's also usually assigned by a single manager's gut feel, with no check on whether that judgment means anything. Here's what happens when you measure it properly instead.</p>
+    </header>
+
+    <div class="post-body">
+
+      <div class="callout">
+        <p><strong>This is a demonstration, not a client engagement.</strong> The ratings and outcomes below come from a synthetic-data simulation, not a real organization. Every number is the script's actual output — nothing was adjusted to look better. Unlike the <a href="/case-studies/promotion-readiness-index/">promotion-readiness case study</a>, this one isn't about prediction — it's about the measurement step that has to come first: does the label even mean the same thing to two different observers?</p>
+      </div>
+
+      <h2>The question</h2>
+      <p>Ask five HR leaders what "high potential" means and you'll get five different answers — some mix of ambition, intelligence, likability, and whoever a VP happened to notice in a meeting. Most companies still run their HiPo process on a single manager's holistic nomination: one person, one gut-feel rating, no second opinion, no definition anyone wrote down.</p>
+      <p>That's not a measurement process. As covered in <a href="/insights/posts/what-does-it-mean-to-measure-something/">an earlier piece on what measurement actually requires</a>, the test is simple: can you describe what the world looks like when the construct is high versus low, in terms specific enough that two people watching the same person would agree? If not, you don't have a measurement problem — you have a definition problem, and it has to be solved first.</p>
+
+      <h2>Step 1: Define the construct</h2>
+      <p>"High potential" was split into three separable facets, following the framing Lombardo and Eichinger popularized in their work on learning agility as the core of potential identification (Lombardo &amp; Eichinger, 2000):</p>
+      <ul>
+        <li><strong>Learning agility</strong> — seeks out unfamiliar situations, extracts lessons from them quickly, and applies those lessons under new conditions rather than repeating what worked before.</li>
+        <li><strong>Drive for scope</strong> — consistently seeks larger scope and ambiguity rather than stability, and sustains effort against a demanding stretch goal over time.</li>
+        <li><strong>Interpersonal influence</strong> — builds followership and earns buy-in from people outside their direct authority, adapting style to influence upward, across, and outward.</li>
+      </ul>
+      <p>Each facet was written as a behaviorally anchored 1–5 rubric — concrete, observable behaviors at each scale point, not adjectives like "strong" or "exceptional" left to the rater's imagination.</p>
+
+      <h2>Step 2: Build the rubric, use two raters</h2>
+      <p>Every employee in the talent-review population was rated on all three facets by two independent observers — their manager and a calibration-panel rater who'd seen their work in a cross-functional setting. Two raters isn't bureaucratic overhead; it's the only way to find out whether the rubric measures something real or just one person's impression.</p>
+
+      <h2>Step 3: Check whether the raters agree</h2>
+      <p>Reliability was assessed with the intraclass correlation coefficient (ICC) — the standard tool for rater agreement (Shrout &amp; Fleiss, 1979) — using the absolute-agreement form, the stricter version that penalizes raters who rank people similarly but land on different actual scores.</p>
+
+      <figure class="case-study-figure">
+        <img src="/img/case-studies/hipo_reliability.svg" alt="Horizontal bar chart of ICC reliability for each facet and the composite score, comparing a single rater to the average of two raters" loading="lazy" />
+        <figcaption>ICC benchmarks per Koo &amp; Li (2016): below 0.5 poor, 0.5&ndash;0.75 moderate, 0.75&ndash;0.9 good, above 0.9 excellent.</figcaption>
+      </figure>
+
+      <p>The three facets aren't equally measurable. <strong>Interpersonal influence</strong> is the easiest to observe consistently — two raters land close to the same score (single-rater ICC 0.81, "good" territory on its own). <strong>Drive for scope</strong> is the hardest — it's more inferential, and a single rater's judgment of it is only moderately reliable (ICC 0.50, right at the "poor/moderate" boundary). <strong>Learning agility</strong> falls in between (ICC 0.70).</p>
+      <p>Averaging the two raters' scores together lifts every facet, and lifts the composite from 0.78 to 0.87 — crossing clearly into "good" reliability. This is the practical case for a calibration panel rather than a single nominating manager: it's not about catching bias in any one rater, it's that two independent, moderately-reliable judgments combine into one meaningfully more reliable score.</p>
+
+      <h2>Step 4: Check whether it predicts anything</h2>
+      <p>A rubric can be perfectly reliable and still measure the wrong thing. To check, the structured composite score was correlated against an independent criterion collected 12 months later — an assessment from a source not involved in building the rubric — and compared against what a naive, unstructured single-rater nomination would have produced on the same population.</p>
+
+      <figure class="case-study-figure">
+        <img src="/img/case-studies/hipo_validity_comparison.svg" alt="Bar chart comparing the correlation with a 12-month outcome for the naive nomination (r=0.34) versus the structured composite (r=0.45)" loading="lazy" />
+        <figcaption>Correlation (r) with an independent 12-month outcome measure.</figcaption>
+      </figure>
+
+      <figure class="case-study-figure">
+        <img src="/img/case-studies/hipo_validity_scatter.svg" alt="Scatter plot of structured HiPo composite score against the independent 12-month outcome, with a positive regression line" loading="lazy" />
+        <figcaption>Each point is one employee. The relationship is real but noisy — as any single measure of a human trait should be expected to be.</figcaption>
+      </figure>
+
+      <p>The structured composite correlated more strongly with the later outcome (r = 0.45, 95% CI [0.37, 0.53]) than the naive single-rater nomination (r = 0.34, 95% CI [0.25, 0.43]). Worth saying plainly: those confidence intervals overlap. This sample doesn't let us declare with certainty that structured measurement is better <em>in general</em> — only that, in this data, it pointed that direction and by a meaningful amount. Overclaiming precision here would be exactly the mistake this whole exercise is designed to avoid.</p>
+      <p>What's more interesting than the size of the gap is <em>why</em> the naive nomination underperforms: it isn't just noisier, it's partly measuring the wrong thing. It was simulated with real sensitivity to a recent performance-halo effect — a visible recent win or loss — that has nothing to do with a person's actual trajectory. A single unstructured judgment doesn't just add noise to a good measurement; it can substitute a related-but-different construct for the one you meant to assess.</p>
+
+      <h2>What this demonstrates — and its limits</h2>
+      <p>The synthetic numbers above aren't a claim about what reliability or validity your organization would get — they illustrate the method: name the construct's facets explicitly, write behavioral anchors, use enough independent raters to check agreement, and validate against something the rubric wasn't built to predict.</p>
+      <p>A real engagement would go further than this demo: testing whether the rubric or its outcomes show adverse impact across demographic groups before it touches a real decision, training and calibrating raters rather than assuming naive independence, and validating prospectively against actual promotion or performance data rather than a single simulated criterion. None of that is optional in practice; all of it is out of scope for an illustrative write-up.</p>
+
+      <div class="callout">
+        <p><strong>Want a construct in your organization actually defined and validated?</strong> This is the same measurement-design process used in real engagements — construct first, instrument second, validity checked rather than assumed. <a href="/contact/">Start a conversation</a> or read more about <a href="/services/#measurement">measurement design</a>.</p>
+      </div>
+
+    </div>
+
+    <footer class="post-footer">
+      <a href="/insights/" class="back-link">&larr; All Insights</a>
+    </footer>
+  </div>
+</article>

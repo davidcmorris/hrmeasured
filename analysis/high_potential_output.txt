@@ -1,0 +1,11 @@
+N = 380 employees, 2 raters, 3 facets
+
+=== Reliability (ICC, absolute agreement) by facet ===
+learning_agility: ICC(single rater) = 0.702, ICC(2-rater average) = 0.825
+drive: ICC(single rater) = 0.499, ICC(2-rater average) = 0.666
+interpersonal: ICC(single rater) = 0.805, ICC(2-rater average) = 0.892
+composite: ICC(single rater) = 0.775, ICC(2-rater average) = 0.874
+
+=== Validity: correlation with independent 12-month criterion ===
+Naive single-rater nomination: r = 0.345 [0.253, 0.431]
+Structured composite (2 raters x 3 facets): r = 0.452 [0.368, 0.529]
